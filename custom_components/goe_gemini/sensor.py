@@ -44,20 +44,17 @@ from .entity import GoeEntity
 def _nrg(data: dict[str, Any], index: int) -> float | None:
     """Read one raw value out of the legacy `nrg` array, if present.
 
-    Array layout: 0-2 U L1-L3 (V), 3 U N (V), 4-6 I L1-L3 (A, documented as
-    0.1 A steps but see below), 7-9 P L1-L3 (W), 10 P N (W), 11 P total (W),
-    12-15 power factor L1-L3-N (%).
+    Array layout: 0-2 U L1-L3 (V), 3 U N (V), 4-6 I L1-L3 (A), 7-9 P L1-L3
+    (W), 10 P N (W), 11 P total (W), 12-15 power factor L1-L3-N (%).
 
     The go-e API v1 spec (written for older HOME/HOME+ hardware) documents
-    the power sub-fields as scaled integers (0.1 kW / 0.01 kW steps). On a
-    real Gemini V4 (firmware 60.5), that scaling does not apply: the power
-    values come back already in plain Watts - confirmed by a user report
-    where the old ×10/×100 scaling produced power readings 10x/100x too
-    high. Voltage was always documented as direct volts, so it's unaffected.
-    Current (4-6) is left at the documented 0.1 A scaling since it hasn't
-    been contradicted by a real reading yet, but given the power fields
-    were wrong, it's a reasonable suspect if current readings ever look 10x
-    off too.
+    the power and current sub-fields as scaled integers (0.1 kW / 0.01 kW /
+    0.1 A steps). On a real Gemini V4 (firmware 60.5), none of that scaling
+    applies: every value in this array comes back already in plain native
+    units (W, A) - confirmed by two separate user reports where the old
+    scaling produced power readings 10x/100x too high and a current reading
+    10x too low. Voltage was always documented as direct volts, so it was
+    unaffected either way.
     """
     nrg = data.get("nrg")
     if not isinstance(nrg, list) or index >= len(nrg):
@@ -179,7 +176,7 @@ SENSOR_DESCRIPTIONS: tuple[GoeSensorDescription, ...] = (
             state_class=SensorStateClass.MEASUREMENT,
             native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
             entity_registry_enabled_default=False,
-            value_fn=_nrg_scaled(3 + phase, 0.1),
+            value_fn=_nrg_scaled(3 + phase, 1),  # already in A on Gemini V4/FW 60.5
         )
         for phase in (1, 2, 3)
     ),
