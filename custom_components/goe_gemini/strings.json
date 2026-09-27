@@ -1,0 +1,87 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to your go-e Charger Gemini",
+        "description": "Enter the local IP address or hostname of your charger. This integration only ever reads its status - it never changes any setting - so it is safe to add alongside evcc or the go-e app.",
+        "data": {
+          "host": "Host or IP address",
+          "name": "Name (optional)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not reach the charger at that address. Check the IP and that the go-e app's HTTP API is enabled."
+    },
+    "abort": {
+      "already_configured": "This charger is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "go-e Charger Gemini options",
+        "data": {
+          "scan_interval": "Poll interval (seconds)"
+        },
+        "data_description": {
+          "scan_interval": "How often to read the charger's status. Kept at 15s or slower by default to stay a light, non-intrusive second reader alongside evcc."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "car_state": {
+        "name": "Charging state",
+        "state": {
+          "unknown": "Unknown",
+          "idle": "Idle",
+          "charging": "Charging",
+          "wait_car": "Waiting for car",
+          "complete": "Complete",
+          "error": "Error",
+          "initializing": "Initializing"
+        }
+      },
+      "charging_status_reason": { "name": "Charging status reason" },
+      "error": { "name": "Error" },
+      "session_energy": { "name": "Session energy" },
+      "total_energy": { "name": "Total energy" },
+      "charging_power": { "name": "Charging power" },
+      "power_l1": { "name": "Power L1" },
+      "power_l2": { "name": "Power L2" },
+      "power_l3": { "name": "Power L3" },
+      "voltage_l1": { "name": "Voltage L1" },
+      "voltage_l2": { "name": "Voltage L2" },
+      "voltage_l3": { "name": "Voltage L3" },
+      "current_l1": { "name": "Current L1" },
+      "current_l2": { "name": "Current L2" },
+      "current_l3": { "name": "Current L3" },
+      "active_phases": { "name": "Active phases" },
+      "allowed_current": { "name": "Allowed charging current" },
+      "max_current_limit": { "name": "Max current limit" },
+      "logic_mode": { "name": "Energy logic mode" },
+      "grid_power": { "name": "Grid power" },
+      "pv_power": { "name": "PV power" },
+      "battery_power": { "name": "Battery power" },
+      "energy_data_source": { "name": "Energy data source" },
+      "cable_lock_status": { "name": "Cable lock status" },
+      "lock_mode": { "name": "Lock mode" },
+      "lock_feedback": { "name": "Lock feedback" },
+      "rfid_transaction": { "name": "RFID transaction" },
+      "grid_frequency": { "name": "Grid frequency" },
+      "wifi_signal": { "name": "Wi-Fi signal" },
+      "firmware_version": { "name": "Firmware version" },
+      "serial_number": { "name": "Serial number" },
+      "device_variant": { "name": "Device variant" }
+    },
+    "binary_sensor": {
+      "car_connected": { "name": "Car connected" },
+      "charging": { "name": "Charging" },
+      "charging_allowed": { "name": "Charging allowed" },
+      "pv_surplus_enabled": { "name": "PV surplus mode" },
+      "problem": { "name": "Problem" }
+    }
+  }
+}
