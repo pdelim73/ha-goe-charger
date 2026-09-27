@@ -103,9 +103,16 @@ __init__.py creates GoeDataUpdateCoordinator (coordinator.py)
 ## 4. Entity reference
 
 All values come from a single `GET /api/status?filter=...` call. Key
-scaling notes: the legacy `nrg` array packs U (V, direct), I (0.1 A), P per
-phase (0.1 kW), P total (0.01 kW) - documented in `goecharger/go-eCharger-API-v1`
-and carried over unchanged into v2's "legacy" `nrg` field.
+scaling notes: the legacy `nrg` array packs U (V, direct) and, per the
+`goecharger/go-eCharger-API-v1` spec, I (0.1 A) and P (0.1 kW per phase,
+0.01 kW total). **That power scaling does not hold on a real Gemini V4
+(firmware 60.5)** - a user report showed charging/phase power reading
+10x-100x too high, and reverse-engineering the numbers confirmed the power
+sub-fields already arrive in plain Watts on this hardware/firmware, not the
+v1-era scaled integers. Fixed by using a scale factor of 1 for power. The
+current (I) scaling is left as documented since no contradicting reading
+has come in yet, but given the power fields were wrong, it's a reasonable
+thing to double-check if a current reading ever looks 10x off.
 
 | Entity | Source key(s) | Notes |
 |---|---|---|
@@ -114,7 +121,7 @@ and carried over unchanged into v2's "legacy" `nrg` field.
 | Error | `err` | enum, `none` when no error |
 | Session energy | `wh` | Wh → kWh |
 | Total energy | `eto` | Wh → kWh, lifetime |
-| Charging power | `nrg[11]` | 0.01 kW → W |
+| Charging power | `nrg[11]` | already in W (see scaling note above) |
 | Power/Voltage/Current L1-L3 | `nrg[...]` | disabled by default (diagnostic detail) |
 | Active phases | `pnp` | 1 or 3 |
 | Allowed charging current | `acu` | what the car is currently allowed to draw - informational |
@@ -179,6 +186,15 @@ version, not an aspirational or historical version of it.
   data source configured; if none is set up, these sensors will simply read
   `unknown` rather than `0`, which is the more accurate representation of
   "no data available" versus "measured zero".
+- **Fixed:** `charging_power` and `power_l1`/`l2`/`l3` originally applied the
+  go-e API v1 spec's legacy scaling (0.01 kW / 0.1 kW steps) to the `nrg`
+  array's power fields, which was correct for older HOME/HOME+ hardware but
+  not for this Gemini V4 on firmware 60.5 - a real reading showed values
+  10x-100x too high, confirming the power sub-fields already arrive in
+  plain Watts on this firmware. `current_l1`/`l2`/`l3` still use the
+  documented 0.1 A scaling, unverified against a real reading - worth a
+  sanity check against a known charging current if anyone notices it
+  looking off by 10x.
 - No local HA instance was available to run this integration live during
   development, so verification stopped one level short of an actual running
   Home Assistant: Python syntax checks, every module successfully imported
