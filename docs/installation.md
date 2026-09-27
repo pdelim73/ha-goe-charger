@@ -87,10 +87,24 @@ default entity list focused - enable any of them from the entity's settings
 
 ## Updating later
 
-Because this was added as a HACS custom repository, future commits you (or I)
-push to your GitHub repo show up as a normal HACS update - Settings → HACS →
-you'll see an update badge, click through it, then restart Home Assistant as
-usual.
+Whenever a fix or change is committed and pushed to the GitHub repo, get it
+into your running Home Assistant like this - no reconfiguration needed,
+existing entities and their history carry over unchanged:
+
+1. **HACS → Integrations** (or search) → open **go-e Charger Gemini
+   (Read-Only)**.
+2. If HACS shows an **Update** badge, click it and update.
+   - This repo has no GitHub Releases/version tags, so HACS tracks it by
+     latest commit rather than a version number and may not always surface
+     an automatic badge. If you don't see one: open the integration, click
+     the **⋮** menu → **Redownload** - this pulls whatever is currently on
+     `main` regardless of version detection.
+3. **Restart Home Assistant** (Settings → System → Restart) - required,
+   since Python files under `custom_components/` only reload on a full
+   restart, not automatically.
+4. Check the affected entities after restart - corrected values should
+   appear on the next poll (within the configured scan interval). Past,
+   already-recorded history isn't rewritten, only cosmetic.
 
 ## Uninstalling
 
