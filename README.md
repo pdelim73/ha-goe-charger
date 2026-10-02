@@ -30,7 +30,7 @@ detailed reasoning and the evidence behind that claim.
 | Writes | None, ever |
 | Entities | ~26 sensors + 5 binary sensors, all read-only |
 | Distribution | HACS custom repository |
-| Versioning | Semantic versioning in `manifest.json` - see the [version history](docs/technical-design.md#7-versioning) |
+| Versioning | Semantic versioning in `manifest.json`, published as GitHub Releases (`vX.Y.Z`) - see the [version history](docs/technical-design.md#7-versioning) |
 
 ## License
 

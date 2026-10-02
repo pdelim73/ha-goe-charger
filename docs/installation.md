@@ -87,18 +87,20 @@ default entity list focused - enable any of them from the entity's settings
 
 ## Updating later
 
-Whenever a fix or change is committed and pushed to the GitHub repo, get it
-into your running Home Assistant like this - no reconfiguration needed,
-existing entities and their history carry over unchanged:
+Changes reach HACS when a new version is published as a GitHub Release
+(tag `vX.Y.Z`, see [technical design §7](technical-design.md#7-versioning)).
+A commit pushed to `main` without a release is not picked up by HACS. Get a
+new release into your running Home Assistant like this - no reconfiguration
+needed, existing entities and their history carry over unchanged:
 
 1. **HACS → Integrations** (or search) → open **go-e Charger Gemini
    (Read-Only)**.
-2. If HACS shows an **Update** badge, click it and update.
-   - This repo has no GitHub Releases/version tags, so HACS tracks it by
-     latest commit rather than a version number and may not always surface
-     an automatic badge. If you don't see one: open the integration, click
-     the **⋮** menu → **Redownload** - this pulls whatever is currently on
-     `main` regardless of version detection.
+2. HACS shows an **Update** to the new version (e.g. `v1.0.1`) - click it
+   and update.
+   - HACS checks GitHub periodically, so the update can take a while to
+     appear. To check right away: **⋮** menu → **Update information**. To
+     install a specific version (e.g. roll back): **⋮** → **Redownload** and
+     pick the version.
 3. **Restart Home Assistant** (Settings → System → Restart) - required,
    since Python files under `custom_components/` only reload on a full
    restart, not automatically.
@@ -107,8 +109,7 @@ existing entities and their history carry over unchanged:
    already-recorded history isn't rewritten, only cosmetic.
 5. Optionally confirm the installed version: **Settings → System → Repairs →
    ⋮ → System information**, under *Custom integrations*. It should match
-   the `version` in `manifest.json` on GitHub. HACS itself shows a commit ID
-   rather than this number, since the repo has no releases. Version scheme
+   the release version HACS shows (e.g. `1.0.1` for `v1.0.1`). Version scheme
    and history: [technical design §7](technical-design.md#7-versioning).
 
 ## Uninstalling

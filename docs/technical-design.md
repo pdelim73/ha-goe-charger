@@ -225,14 +225,24 @@ following semantic versioning (`MAJOR.MINOR.PATCH`):
 - Bump the version in the same commit as the code change, before pushing.
   Changes that only touch docs or CI don't bump it - the version describes
   the integration code under `custom_components/`.
+- Every version is published as a **GitHub Release** tagged `vX.Y.Z`,
+  matching the manifest. HACS installs the latest release (not the latest
+  commit on `main`), shows its version number, and offers an **Update**
+  when a newer release is published. A code change therefore only reaches
+  HACS once it's released; docs-only commits don't need a release.
 - Home Assistant shows the installed version under **Settings → System →
   Repairs → ⋮ → System information**, in the *Custom integrations* list.
-- There are no git tags or GitHub Releases, so HACS tracks the latest
-  commit on `main` and shows a commit ID rather than this version number
-  (see "Updating later" in [`installation.md`](installation.md)). If
-  Releases are added later (tag `vX.Y.Z` matching the manifest), HACS will
-  install the latest *release* instead of `main` and show proper update
-  badges - but then every fix needs a release before HACS picks it up.
+
+### Release process
+
+1. Change the code, bump `version` in `manifest.json`, add a row to the
+   version history below, commit and push to `main`.
+2. Publish the release from the pushed commit:
+   ```bash
+   gh release create vX.Y.Z --target main --title "vX.Y.Z" --notes "<the version history row>"
+   ```
+   (or on GitHub: **Releases → Draft a new release**, new tag `vX.Y.Z` on `main`).
+3. In Home Assistant, HACS shows the update; install it and restart.
 
 ### Version history
 
