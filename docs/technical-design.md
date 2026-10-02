@@ -209,3 +209,34 @@ version, not an aspirational or historical version of it.
   entities populate correctly happens
   on your own Home Assistant instance after installation - see
   [`installation.md`](installation.md).
+
+## 7. Versioning
+
+The integration's version is the `version` field in
+[`custom_components/goe_gemini/manifest.json`](../custom_components/goe_gemini/manifest.json),
+following semantic versioning (`MAJOR.MINOR.PATCH`):
+
+| Bump | When | Example |
+|---|---|---|
+| PATCH | Bug fix, no change to entities or setup | `nrg` scaling fix (1.0.0 → 1.0.1) |
+| MINOR | New read-only entity, option or diagnostic, nothing existing changes | Adding a new sensor |
+| MAJOR | Breaking change: entity/unique IDs renamed or removed, or setup must be redone | Changing the unique_id scheme |
+
+- Bump the version in the same commit as the code change, before pushing.
+  Changes that only touch docs or CI don't bump it - the version describes
+  the integration code under `custom_components/`.
+- Home Assistant shows the installed version under **Settings → System →
+  Repairs → ⋮ → System information**, in the *Custom integrations* list.
+- There are no git tags or GitHub Releases, so HACS tracks the latest
+  commit on `main` and shows a commit ID rather than this version number
+  (see "Updating later" in [`installation.md`](installation.md)). If
+  Releases are added later (tag `vX.Y.Z` matching the manifest), HACS will
+  install the latest *release* instead of `main` and show proper update
+  badges - but then every fix needs a release before HACS picks it up.
+
+### Version history
+
+| Version | Changes |
+|---|---|
+| 1.0.1 | Fixed `charging_power`, `power_l1`-`l3` (10x-100x too high) and `current_l1`-`l3` (10x too low): the `nrg` array arrives in native W/A on Gemini V4 firmware 60.5, not the v1-spec scaled units. |
+| 1.0.0 | Initial release: read-only local API v2 polling, ~26 sensors + 5 binary sensors, UI config flow and options flow (poll interval), diagnostics with the serial redacted. |

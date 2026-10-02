@@ -105,6 +105,11 @@ existing entities and their history carry over unchanged:
 4. Check the affected entities after restart - corrected values should
    appear on the next poll (within the configured scan interval). Past,
    already-recorded history isn't rewritten, only cosmetic.
+5. Optionally confirm the installed version: **Settings → System → Repairs →
+   ⋮ → System information**, under *Custom integrations*. It should match
+   the `version` in `manifest.json` on GitHub. HACS itself shows a commit ID
+   rather than this number, since the repo has no releases. Version scheme
+   and history: [technical design §7](technical-design.md#7-versioning).
 
 ## Uninstalling
 
